@@ -69,7 +69,7 @@ module cv32e40p_register_file #(
   localparam NUM_TOT_WORDS = FPU ? (ZFINX ? NUM_WORDS : NUM_WORDS + NUM_FP_WORDS) : NUM_WORDS;
 
   // integer register file
-  logic [    NUM_WORDS-1:0][DATA_WIDTH-1:0] mem;
+  logic [DATA_WIDTH-1:0] mem [NUM_WORDS-1:0];
 
   // fp register file
   logic [ NUM_FP_WORDS-1:0][DATA_WIDTH-1:0] mem_fp;
