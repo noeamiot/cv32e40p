@@ -27,15 +27,11 @@ module simple_system (
   } bus_host_e;
 
   typedef enum logic[0:0] {
-    Ram,
-    Timer
+    Ram
   } bus_device_e;
 
-  localparam int NrDevices = 2;
+  localparam int NrDevices = 1;
   localparam int NrHosts = 1;
-
-  // interrupts
-  logic timer_irq;
 
   // host and device signals
   logic           host_req    [NrHosts];
@@ -66,8 +62,6 @@ module simple_system (
   logic [31:0] cfg_device_addr_mask [NrDevices];
   assign cfg_device_addr_base[Ram] = 32'h100000;
   assign cfg_device_addr_mask[Ram] = ~32'hFFFFF; // 1 MB
-  assign cfg_device_addr_base[Timer] = 32'h30000;
-  assign cfg_device_addr_mask[Timer] = ~32'h3FF; // 1 kB
 
   // Instruction fetch signals
   logic instr_req;
@@ -180,23 +174,5 @@ module simple_system (
       .b_wdata_i   (32'b0),
       .b_rvalid_o  (instr_rvalid),
       .b_rdata_o   (instr_rdata)
-    );
-
-  timer #(
-    .DataWidth    (32),
-    .AddressWidth (32)
-    ) u_timer (
-      .clk_i          (clk_sys),
-      .rst_ni         (rst_sys_n),
-
-      .timer_req_i    (device_req[Timer]),
-      .timer_we_i     (device_we[Timer]),
-      .timer_be_i     (device_be[Timer]),
-      .timer_addr_i   (device_addr[Timer]),
-      .timer_wdata_i  (device_wdata[Timer]),
-      .timer_rvalid_o (device_rvalid[Timer]),
-      .timer_rdata_o  (device_rdata[Timer]),
-      .timer_err_o    (device_err[Timer]),
-      .timer_intr_o   (timer_irq)
     );
 endmodule
